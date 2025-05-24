@@ -33,7 +33,10 @@ router.post('/', (req, res) => {
       return res.status(500).json({ error: 'Failed to generate PDF' });
     }
 
-    res.download(pdfPath, `land_record_${Date.now()}.pdf`, (err) => {
+    const sanitizedOwner = record.owner_name.replace(/[^a-z0-9]/gi, '_');
+    const filename = `land_record_${sanitizedOwner}_${Date.now()}.pdf`;
+
+    res.download(pdfPath, filename, (err) => {
       if (err) console.error('Error sending PDF:', err);
       fs.unlink(pdfPath, () => {});
     });
