@@ -1,34 +1,33 @@
 # Landeed API Simulation
 
-This project is a simple REST API built with Express.js and MySQL that simulates the core functionality of Landeed.com. It accepts search input related to land/property records and returns the result in a downloadable PDF format.
+This project is a simple REST API built with Express.js and MySQL database that simulates the core functionality of Landeed.com. It allows users to search for land records using parcel ID, plot number, or owner name and returns a downloadable PDF summary of the record.
 
 ## Features
 
-- Accepts search input (e.g., land parcel ID, plot number, or owner name)
-- Queries a MySQL database
-- Generates a PDF file containing land record summary
-- Returns the PDF file as an API response
+- Search land records by:
+  - Parcel ID
+  - Plot Number
+  - Owner Name
+- Generate a downloadable PDF with land record details.
+- MySQL backend to store and query land data.
+- Clean and modular Express.js codebase.
 
 ## Tech Stack
 
 - Node.js + Express.js
-- MySQL (can substitute Apache Doris)
+- MySQL
 - PDFKit (for PDF generation)
 
 ## Setup Instructions
 
 1. Clone this repository:
 ```
-
 git clone [https://github.com/Harshninave04/Landeed-api-simulation](https://github.com/yourusername/landeed-api-simulation.git)
-
 ```
 
 2. Install dependencies:
 ```
-
 npm install
-
 ````
 
 3. Set up your MySQL database and import the sample data:
@@ -47,20 +46,33 @@ const connection = mysql.createConnection({
 
 5. Start the server:
 
-   ```
-   node index.js
-   ```
-
-## API Endpoint
-
-### Search Property
-
 ```
-GET /search?query=some-value
+node index.js
 ```
+Server will run at: `http://localhost:3000`
 
-* `query`: Accepts a land parcel ID, plot number, or owner name
-* Returns a `PDF` containing the matched property details
+## API Usage
+
+Endpoint: `POST /search`
+
+Request Body:
+
+```json
+{
+  "query": "John Doe"
+}
+```
+Response:
+1. If a match is found, a PDF file will be returned as a download.
+2. If no match is found, a 404 JSON response is returned.
+
+### You can test using Postman (use "Send response to file") or via curl:
+
+```bash
+curl -X POST http://localhost:3000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "John Doe"}' --output land_record.pdf
+```
 
 ## Reference
 The project is inspired by the functionality of Landeed.com and http://doris.delhigovt.nic.in/ for understanding the structure of land records. No data scraping or external integration is performed.
