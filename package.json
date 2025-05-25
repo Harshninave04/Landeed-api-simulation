@@ -1,0 +1,20 @@
+{
+  "name": "landeed",
+  "version": "2.4.22",
+  "description": "This project is a simple REST API built with Express.js and MySQL that simulates the core functionality of Landeed.com. It accepts search input related to land/property records and returns the result in a downloadable PDF format.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Harsh <harshninave58@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "pdfkit": "^0.17.1"
+  }
+}
