@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Land Record Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Land Record Search</h2>
+  <input type="text" id="query" placeholder="Enter parcel ID, plot number, or owner name">
+  <button onclick="searchRecord()">Search & Download PDF</button>
+  <div class="status" id="status"></div>
+
+  <script>
+    async function searchRecord() {
+      const query = document.getElementById('query').value.trim();
+      const status = document.getElementById('status');
+      status.textContent = 'Searching...';
+
+      if (!query) {
+        status.textContent = 'Please enter a valid search term.';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) {
+          status.textContent = 'No matching record found.';
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Try to extract filename from headers
+        let filename = 'land_record.pdf';
+        const disposition = response.headers.get('Content-Disposition');
+        if (disposition && disposition.includes('filename=')) {
+          filename = disposition.split('filename=')[1].replace(/"/g, '');
+        }
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        status.textContent = 'Download started.';
+      } catch (error) {
+        console.error('Error:', error);
+        status.textContent = 'An error occurred while processing your request.';
+      }
+    }
+  </script>
+</body>
+</html>
